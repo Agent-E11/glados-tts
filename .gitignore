@@ -1,3 +1,10 @@
 **/__pycache__/**
 *.wav
 audio/*
+models/glados-new.pt
+models/glados.pt
+models/vocoder-cpu-hq.pt
+models/vocoder-cpu-lq.pt
+models/vocoder-gpu.pt
+models/emb/glados_p1.pt
+models/emb/glados_p2.pt

@@ -1,3 +1,4 @@
+import os
 import torch
 import numpy as np
 from utils.tools import prepare_text
@@ -122,13 +123,44 @@ class tts_runner:
             time.sleep(old_dur + 0.1)
 
         audio.export("output.wav", format = "wav")
+
+        # Save the file
+        if save:
+            # Make sure `outputs` directory is present
+            if not os.path.exists("outputs"):
+                os.mkdir("outputs")
+
+            # Define parts of output file name
+            OUTPUT_NAME_START = "output_"
+            OUTPUT_FILE_EXT = "wav"
+            i = 0
+
+            # List previous outputs
+            outputs = os.listdir("outputs")
+            print(outputs)
+
+            # Loop through output numbers until you find one that is not taken, then export file
+            while True:
+                if not f"{OUTPUT_NAME_START + str(i)}.{OUTPUT_FILE_EXT}" in outputs:
+                    audio.export(f"outputs/{OUTPUT_NAME_START + str(i)}.{OUTPUT_FILE_EXT}", format = "wav")
+                    break
+                else:
+
+                    # This number is already taken, try next file number
+                    i += 1 
+            # Reset `i`
+            i = 0                
+
         time_left = old_dur - time.time() + old_time
         if time_left >= 0:
             time.sleep(time_left + delay)
 
 if __name__ == "__main__":
     glados = tts_runner(False, True)
-    while True:
-        text = input("Input: ")
-        if len(text) > 0:
-            glados.speak(text, True)
+    try:
+        while True:
+            text = input("Input: ")
+            if len(text) > 0:
+                glados.speak(text, True, save=True, delay=0.3)
+    except KeyboardInterrupt:
+        exit(0)
